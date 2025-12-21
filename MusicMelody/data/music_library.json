@@ -1,0 +1,6 @@
+{
+  "happy": ["Happy by Pharrell", "Can't Stop the Feeling by Justin", "Walking on Sunshine by Katrina & The Waves"],
+  "sad": ["Someone Like You by Adele", "Fix You by Coldplay", "Stay With Me by Sam Smith"],
+  "angry": ["Break Stuff by Limp Bizkit", "Killing In The Name by Rage Against the Machine", "Duality by Slipknot"],
+  "neutral": ["Shape of You by Ed Sheeran", "Blinding Lights by The Weeknd", "Believer by Imagine Dragons"]
+}
