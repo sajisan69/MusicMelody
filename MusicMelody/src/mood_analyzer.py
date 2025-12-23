@@ -1,29 +1,48 @@
-import string
+from textblob import TextBlob
+
 
 class MoodAnalyzer:
     def __init__(self):
-        self.__mood = None
+        # Data Structure: Dictionary for exact keyword matching
+        self.keyword_map = {
+            "happy": "Happy", "joy": "Happy", "good": "Happy",
+            "sad": "Melancholic", "cry": "Melancholic", "bad": "Melancholic",
+            "angry": "Energetic", "party": "Energetic", "gym": "Energetic",
+            "sleep": "Calm", "tired": "Calm", "relax": "Calm",
+            "study": "Deep Focus", "work": "Deep Focus", "focus": "Deep Focus"
+        }
 
-    def analyze_mood(self, mood_text):
-        # Clean input
-        mood_text = mood_text.lower().strip()
-        mood_text = mood_text.translate(str.maketrans('', '', string.punctuation))
+    def get_mood_category(self, text):
+        """
+        Logic: Check keywords first -> Fallback to AI (TextBlob)
+        Returns: (Mood Name, Emoji)
+        """
+        text_lower = text.lower()
 
-        happy_keywords = ["happy", "joy", "awesome", "great", "excited", "😊", "😁"]
-        sad_keywords = ["sad", "down", "unhappy", "depressed", "😢", "😭"]
-        angry_keywords = ["angry", "mad", "frustrated", "😡", "😠"]
+        # 1. KEYWORD DETECTION (Week 3 Requirement)
+        for word, mood in self.keyword_map.items():
+            if word in text_lower:
+                return mood, self._get_emoji(mood)
 
-        # Check keywords anywhere in the text
-        if any(word in mood_text for word in happy_keywords):
-            self.__mood = "happy"
-        elif any(word in mood_text for word in sad_keywords):
-            self.__mood = "sad"
-        elif any(word in mood_text for word in angry_keywords):
-            self.__mood = "angry"
+        # 2. SENTIMENT ANALYSIS (Fallback)
+        blob = TextBlob(text)
+        score = blob.sentiment.polarity
+
+        if score > 0.5:
+            return "Energetic", "🔥"
+        elif 0 < score <= 0.5:
+            return "Happy", "😊"
+        elif -0.5 <= score < 0:
+            return "Melancholic", "🌧️"
+        elif score < -0.5:
+            return "Deep Focus", "🧘"
         else:
-            self.__mood = "neutral"
+            return "Calm", "☕"
 
-        return self.__mood
-
-    def get_mood(self):
-        return self.__mood
+    def _get_emoji(self, mood):
+        # Helper to get emoji for keywords
+        emojis = {
+            "Happy": "😊", "Melancholic": "🌧️",
+            "Energetic": "🔥", "Calm": "☕", "Deep Focus": "🧘"
+        }
+        return emojis.get(mood, "🎵")
