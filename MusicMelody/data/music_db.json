@@ -1,29 +1,74 @@
 {
-    "Melancholic": [
-        {
-            "title": "Sad Songs to Listen to When You Need a Good Cry - Slowed & Reverb Songs - Late Night Songs Playlist",
-            "link": "https://www.youtube.com/watch?v=SbiYARQG7pQ",
-            "duration": "1:43:45"
-        },
-        {
-            "title": "Top 10 Sad Songs Playlist | Best Of Keshab Dey | Hit Sad Songs 2025 | Sad Jukebox",
-            "link": "https://www.youtube.com/watch?v=A4eFmVkWPtg",
-            "duration": "2:57:34"
-        },
-        {
-            "title": "Sad songs // WARNING! These songs will make you cry",
-            "link": "https://www.youtube.com/watch?v=SIHDpxLA-kE",
-            "duration": "23:20"
-        },
-        {
-            "title": "finding hope 1 hour mix (sad music playlist)",
-            "link": "https://www.youtube.com/watch?v=XqkPwvXUsyo",
-            "duration": "1:10:10"
-        },
-        {
-            "title": "feeling Melancholic but still have to Study | Dark Academia Playlist",
-            "link": "https://www.youtube.com/watch?v=4GGJDmWw8Co",
-            "duration": "2:18:47"
-        }
-    ]
+  "Happy": [
+    {"title": "Happy Vibes", "artist": "Pharrell", "filename": "Happyvibes.mp3"},
+    {"title": "Can't Stop Feeling", "artist": "Justin T", "filename": "cantstop.mp3"},
+    {"title": "Walking on Sunshine", "artist": "Katrina", "filename": "walking.mp3"},
+    {"title": "Good Times", "artist": "Chic", "filename": "goodtimes.mp3"},
+    {"title": "Uptown Funk", "artist": "Bruno Mars", "filename": "uptown.mp3"},
+    {"title": "Best Day of My Life", "artist": "Authors", "filename": "bestday.mp3"}
+  ],
+  "Sad": [
+    {"title": "Someone Like You", "artist": "Adele", "filename": "sad_1.mp3"},
+    {"title": "Fix You", "artist": "Coldplay", "filename": "sad_2.mp3"},
+    {"title": "Let Her Go", "artist": "Passenger", "filename": "sad_3.mp3"},
+    {"title": "Yesterday", "artist": "Beatles", "filename": "sad_4.mp3"},
+    {"title": "The Night We Met", "artist": "Lord Huron", "filename": "sad_5.mp3"},
+    {"title": "Tears in Heaven", "artist": "Eric Clapton", "filename": "sad_6.mp3"}
+  ],
+  "Energetic": [
+    {"title": "Eye of the Tiger", "artist": "Survivor", "filename": "energy_1.mp3"},
+    {"title": "Stronger", "artist": "Kanye", "filename": "energy_2.mp3"},
+    {"title": "Thunderstruck", "artist": "AC/DC", "filename": "energy_3.mp3"},
+    {"title": "Lose Yourself", "artist": "Eminem", "filename": "energy_4.mp3"},
+    {"title": "Can't Hold Us", "artist": "Macklemore", "filename": "energy_5.mp3"},
+    {"title": "Level Up", "artist": "Ciara", "filename": "energy_6.mp3"}
+  ],
+  "Calm": [
+    {"title": "Weightless", "artist": "Marconi Union", "filename": "calm_1.mp3"},
+    {"title": "River Flows in You", "artist": "Yiruma", "filename": "calm_2.mp3"},
+    {"title": "Clair de Lune", "artist": "Debussy", "filename": "calm_3.mp3"},
+    {"title": "Night Trouble", "artist": "Petit Biscuit", "filename": "calm_4.mp3"},
+    {"title": "Sunset Lover", "artist": "Petit Biscuit", "filename": "calm_5.mp3"},
+    {"title": "Gymnopédie No.1", "artist": "Satie", "filename": "calm_6.mp3"}
+  ],
+  "Angry": [
+    {"title": "In the End", "artist": "Linkin Park", "filename": "angry_1.mp3"},
+    {"title": "Break Stuff", "artist": "Limp Bizkit", "filename": "angry_2.mp3"},
+    {"title": "Killing In The Name", "artist": "Rage", "filename": "angry_3.mp3"},
+    {"title": "Du Hast", "artist": "Rammstein", "filename": "angry_4.mp3"},
+    {"title": "Psychosocial", "artist": "Slipknot", "filename": "angry_5.mp3"},
+    {"title": "Chop Suey!", "artist": "System of a Down", "filename": "angry_6.mp3"}
+  ],
+  "Focused": [
+    {"title": "Lofi Study Beats", "artist": "Lofi Girl", "filename": "focus_1.mp3"},
+    {"title": "Experience", "artist": "Ludovico", "filename": "focus_2.mp3"},
+    {"title": "Time", "artist": "Hans Zimmer", "filename": "focus_3.mp3"},
+    {"title": "Cornfield Chase", "artist": "Hans Zimmer", "filename": "focus_4.mp3"},
+    {"title": "Eternal Youth", "artist": "Rude", "filename": "focus_5.mp3"},
+    {"title": "Daydreaming", "artist": "Radiohead", "filename": "focus_6.mp3"}
+  ],
+  "Romantic": [
+    {"title": "Perfect", "artist": "Ed Sheeran", "filename": "love_1.mp3"},
+    {"title": "All of Me", "artist": "John Legend", "filename": "love_2.mp3"},
+    {"title": "Thinking Out Loud", "artist": "Ed Sheeran", "filename": "love_3.mp3"},
+    {"title": "Just the Way You Are", "artist": "Bruno Mars", "filename": "love_4.mp3"},
+    {"title": "At Last", "artist": "Etta James", "filename": "love_5.mp3"},
+    {"title": "Lover", "artist": "Taylor Swift", "filename": "love_6.mp3"}
+  ],
+  "Chill": [
+    {"title": "Sunflower", "artist": "Post Malone", "filename": "chill_1.mp3"},
+    {"title": "Location", "artist": "Khalid", "filename": "chill_2.mp3"},
+    {"title": "Passionfruit", "artist": "Drake", "filename": "chill_3.mp3"},
+    {"title": "Slow Dancing", "artist": "Joji", "filename": "chill_4.mp3"},
+    {"title": "Electric Feel", "artist": "MGMT", "filename": "chill_5.mp3"},
+    {"title": "Waves", "artist": "Mr. Probz", "filename": "chill_6.mp3"}
+  ],
+  "Motivated": [
+    {"title": "Hall of Fame", "artist": "The Script", "filename": "motivate_1.mp3"},
+    {"title": "Remember the Name", "artist": "Fort Minor", "filename": "motivate_2.mp3"},
+    {"title": "Unstoppable", "artist": "Sia", "filename": "motivate_3.mp3"},
+    {"title": "Believer", "artist": "Imagine Dragons", "filename": "motivate_4.mp3"},
+    {"title": "High Hopes", "artist": "Panic! At The Disco", "filename": "motivate_5.mp3"},
+    {"title": "Champion", "artist": "Fall Out Boy", "filename": "motivate_6.mp3"}
+  ]
 }
