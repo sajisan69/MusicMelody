@@ -1,10 +1,8 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
 from tkinter import font as tkfont
-import threading
-import time
+from tkinter import messagebox, Canvas, Scale
+import random
 
-# --- IMPORTS ---
 from src.user import User
 from src.mood_analyzer import MoodAnalyzer
 from src.music_recommender import MusicRecommender
@@ -12,205 +10,285 @@ from src.music_recommender import MusicRecommender
 
 class UIHandler:
     def __init__(self):
-        # --- FLAGSHIP COLOR PALETTE ---
+        # --- NEW "DEEP SPACE" COLOR PALETTE (NO BLACK) ---
         self.colors = {
-            "sidebar": "#121212",  # Spotify-like Black
-            "main_bg": "#181818",  # Dark Grey
-            "card_bg": "#282828",  # Lighter Grey for cards
-            "accent": "#1DB954",  # Professional Green
-            "text_main": "#FFFFFF",  # White
-            "text_sub": "#B3B3B3",  # Light Grey
-            "hover": "#3E3E3E"  # Hover state
+            "bg": "#1E1E2E",  # Deep Blue-Grey (Not Black)
+            "sidebar": "#181825",  # Darker Blue-Grey for sidebar
+            "card_bg": "#313244",  # Soft Slate for cards
+            "card_hover": "#45475A",  # Lighter Slate for hover
+            "accent_1": "#89B4FA",  # Soft Blue
+            "accent_2": "#F38BA8",  # Soft Red/Pink
+            "text_main": "#CDD6F4",  # White-ish
+            "text_sub": "#A6ADC8",  # Grey-ish
+            "player_bg": "#11111B"  # Very dark blue for player
         }
 
-        # Logic
-        self.user = User()
+        self.quotes = [
+            "\"Music is the strongest form of magic.\"",
+            "\"Where words leave off, music begins.\"",
+            "\"Life involves rhythm, accept it.\"",
+            "\"Music washes away from the soul the dust of everyday life.\""
+        ]
+
+        # Backend
+        self.user = User("MusicLover")
         self.analyzer = MoodAnalyzer()
         self.recommender = MusicRecommender()
 
+        # --- STATE MEMORY (Fixes the erasing issue) ---
+        self.last_mood = None
+        self.last_songs = []
+        self.player_visible = False
+
         # Window Setup
         self.root = tk.Tk()
-        self.root.title("MusicMelody | Pro Edition")
-        self.root.geometry("1000x700")
-        self.root.configure(bg=self.colors["main_bg"])
+        self.root.title("MusicMelody | Modern Blue")
+        self.root.geometry("1150x780")
+        self.root.configure(bg=self.colors["bg"])
 
-        # Custom Styles
-        style = ttk.Style()
-        style.theme_use('clam')
-        style.configure("green.Horizontal.TProgressbar", foreground=self.colors['accent'],
-                        background=self.colors['accent'])
-
-        # Fonts
-        self.f_head = tkfont.Font(family="Segoe UI", size=18, weight="bold")
-        self.f_sub = tkfont.Font(family="Segoe UI", size=10)
-        self.f_bold = tkfont.Font(family="Segoe UI", size=10, weight="bold")
-
-        # Grid Layout
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_rowconfigure(0, weight=1)
 
-        self._build_layout()
+        self._init_ui()
 
-    def _build_layout(self):
+    def _init_ui(self):
         # 1. SIDEBAR
-        sidebar = tk.Frame(self.root, bg=self.colors["sidebar"], width=220)
-        sidebar.grid(row=0, column=0, sticky="ns")
+        sidebar = tk.Frame(self.root, bg=self.colors["sidebar"], width=260)
+        sidebar.grid(row=0, column=0, rowspan=2, sticky="ns")
         sidebar.pack_propagate(False)
 
-        tk.Label(sidebar, text="🎵 MusicMelody", font=("Segoe UI", 14, "bold"),
-                 bg=self.colors["sidebar"], fg="white").pack(pady=(30, 40))
+        # Logo
+        tk.Label(sidebar, text="🎵 MusicMelody", font=("Segoe UI", 18, "bold"),
+                 bg=self.colors["sidebar"], fg=self.colors["accent_1"]).pack(pady=(50, 5))
 
-        self._sidebar_item(sidebar, "🏠  Home", active=True)
-        self._sidebar_item(sidebar, "🔍  Search")
-        self._sidebar_item(sidebar, "📚  Your Library")
+        tk.Label(sidebar, text="MODERN BLUE", font=("Segoe UI", 8, "bold"),
+                 bg=self.colors["sidebar"], fg=self.colors["accent_2"]).pack(pady=(0, 50))
 
-        tk.Frame(sidebar, bg=self.colors["card_bg"], height=1).pack(fill="x", padx=20, pady=20)
+        # Nav Buttons
+        self._nav_btn(sidebar, "🏠  HOME", self._show_home)
+        self._nav_btn(sidebar, "📜  HISTORY", self._show_history)
 
-        tk.Label(sidebar, text="PLAYLISTS", font=("Segoe UI", 8, "bold"),
-                 bg=self.colors["sidebar"], fg=self.colors["text_sub"]).pack(anchor="w", padx=25)
+        # 2. MAIN AREA
+        self.main_area = tk.Frame(self.root, bg=self.colors["bg"], padx=60, pady=40)
+        self.main_area.grid(row=0, column=1, sticky="nsew")
 
-        self._sidebar_item(sidebar, "❤️  Liked Songs")
+        # 3. HIDDEN PLAYER BAR
+        self.player_frame = tk.Frame(self.root, bg=self.colors["player_bg"], height=110,
+                                     highlightbackground=self.colors["card_bg"], highlightthickness=1)
 
-        # 2. MAIN CONTENT
-        main = tk.Frame(self.root, bg=self.colors["main_bg"], padx=40, pady=30)
-        main.grid(row=0, column=1, sticky="nsew")
+        self._show_home()
 
-        tk.Label(main, text="Good evening,", font=self.f_head, bg=self.colors["main_bg"], fg="white").pack(anchor="w")
-        tk.Label(main, text="What's on your mind?", font=self.f_sub, bg=self.colors["main_bg"],
-                 fg=self.colors["text_sub"]).pack(anchor="w", pady=(0, 20))
+    def _nav_btn(self, parent, text, cmd):
+        btn = tk.Button(parent, text=text, font=("Segoe UI", 10, "bold"), bg=self.colors["sidebar"],
+                        fg=self.colors["text_sub"], bd=0, anchor="w", cursor="hand2", command=cmd, padx=40, pady=12,
+                        activebackground=self.colors["bg"], activeforeground=self.colors["accent_1"])
+        btn.pack(fill="x", pady=2)
+
+    # --- PLAYER BAR ---
+    def _build_player_ui(self):
+        for widget in self.player_frame.winfo_children(): widget.destroy()
+
+        # Art & Info
+        art_box = tk.Frame(self.player_frame, bg=self.colors["player_bg"], width=300)
+        art_box.pack(side="left", fill="y", padx=20, pady=15)
+
+        art_sq = tk.Frame(art_box, bg=self.colors["accent_2"], width=70, height=70)
+        art_sq.pack(side="left")
+        art_sq.pack_propagate(False)
+        tk.Label(art_sq, text="♫", font=("Arial", 24), bg=self.colors["accent_2"], fg=self.colors["player_bg"]).pack(
+            expand=True)
+
+        info = tk.Frame(art_box, bg=self.colors["player_bg"])
+        info.pack(side="left", padx=15)
+
+        self.lbl_title = tk.Label(info, text="Song Title", font=("Segoe UI", 12, "bold"),
+                                  bg=self.colors["player_bg"], fg="white", anchor="w")
+        self.lbl_title.pack(anchor="w")
+
+        self.lbl_artist = tk.Label(info, text="Artist", font=("Segoe UI", 10),
+                                   bg=self.colors["player_bg"], fg=self.colors["text_sub"], anchor="w")
+        self.lbl_artist.pack(anchor="w")
+
+        # Controls
+        controls = tk.Frame(self.player_frame, bg=self.colors["player_bg"])
+        controls.pack(side="left", expand=True)
+
+        self._control_btn(controls, "⏪", lambda: self.recommender.seek(-10), 14)
+        self._control_btn(controls, "⏹", self._stop_ui, 16, color=self.colors["accent_2"])
+
+        self.btn_play = tk.Button(controls, text="⏸", command=self._toggle_play_pause,
+                                  bg=self.colors["accent_1"], fg=self.colors["player_bg"], bd=0, font=("Segoe UI", 18),
+                                  width=4, height=1, cursor="hand2")
+        self.btn_play.pack(side="left", padx=20)
+
+        self._control_btn(controls, "⏩", lambda: self.recommender.seek(10), 14)
+
+        # Volume
+        vol_frame = tk.Frame(self.player_frame, bg=self.colors["player_bg"])
+        vol_frame.pack(side="right", padx=40)
+        tk.Label(vol_frame, text="🔊", bg=self.colors["player_bg"], fg=self.colors["text_sub"]).pack(side="left", padx=5)
+
+        scale = Scale(vol_frame, from_=0, to=1, resolution=0.1, orient="horizontal",
+                      bg=self.colors["player_bg"], fg=self.colors["accent_1"], highlightthickness=0,
+                      length=100, showvalue=0, troughcolor=self.colors["card_bg"], command=self.recommender.set_volume)
+        scale.set(0.5)
+        scale.pack(side="left")
+
+    def _control_btn(self, parent, text, cmd, size, color=None):
+        if color is None: color = self.colors["text_main"]
+        btn = tk.Button(parent, text=text, command=cmd, bg=self.colors["player_bg"], fg=color,
+                        bd=0, font=("Segoe UI", size), cursor="hand2", activebackground=self.colors["player_bg"])
+        btn.pack(side="left", padx=15)
+
+    # --- HOME LOGIC ---
+    def _show_home(self):
+        self._clear_main()
+
+        # Header
+        quote = random.choice(self.quotes)
+        tk.Label(self.main_area, text=quote, font=("Georgia", 16, "italic"),
+                 bg=self.colors["bg"], fg=self.colors["text_sub"]).pack(anchor="w", pady=(0, 10))
+
+        tk.Label(self.main_area, text="What do you want to hear?", font=("Segoe UI", 12, "bold"),
+                 bg=self.colors["bg"], fg=self.colors["text_main"]).pack(anchor="w", pady=(0, 25))
 
         # Search Bar
-        search_frame = tk.Frame(main, bg=self.colors["card_bg"], pady=2, padx=2)
-        search_frame.pack(fill="x", pady=(0, 20))
+        input_frame = tk.Frame(self.main_area, bg=self.colors["bg"])
+        input_frame.pack(fill="x", pady=(0, 30))
 
-        self.entry = tk.Entry(search_frame, font=("Segoe UI", 12), bg=self.colors["card_bg"],
-                              fg="white", insertbackground="white", relief="flat")
-        self.entry.pack(side="left", fill="x", expand=True, padx=10, ipady=8)
-        self.entry.bind('<Return>', lambda e: self._on_analyze())
+        self.entry = tk.Entry(input_frame, font=("Segoe UI", 16), bg=self.colors["card_bg"],
+                              fg=self.colors["text_main"], relief="flat", insertbackground="white")
+        self.entry.pack(side="left", fill="x", expand=True, ipady=10, padx=(0, 15))
 
-        btn = tk.Button(search_frame, text="FIND VIBE", bg=self.colors["accent"], fg="white",
-                        font=self.f_bold, relief="flat", cursor="hand2", command=self._on_analyze)
-        btn.pack(side="right", padx=5, fill="y")
+        btn_go = tk.Button(input_frame, text="SEARCH VIBE", bg=self.colors["accent_1"], fg=self.colors["player_bg"],
+                           font=("Segoe UI", 11, "bold"), command=self._detect_mood,
+                           padx=25, pady=8, bd=0, cursor="hand2")
+        btn_go.pack(side="right")
 
-        # Mood & Progress
-        self.info_frame = tk.Frame(main, bg=self.colors["main_bg"])
-        self.info_frame.pack(fill="x", pady=10)
+        # --- RESTORE PREVIOUS SEARCH (Fixes Erasing) ---
+        self._setup_scroll_area()
 
-        self.lbl_mood = tk.Label(self.info_frame, text="", font=("Segoe UI", 12), bg=self.colors["main_bg"],
-                                 fg=self.colors["accent"])
-        self.lbl_mood.pack(anchor="w")
+        if self.last_songs:
+            self._render_results(self.last_mood, self.last_songs)
+        else:
+            tk.Label(self.scrollable_frame, text="Try searching for 'Happy', 'Sad', or 'Focused'...",
+                     bg=self.colors["bg"], fg=self.colors["text_sub"], font=("Segoe UI", 12)).pack(pady=20)
 
-        self.progress = ttk.Progressbar(self.info_frame, style="green.Horizontal.TProgressbar", orient="horizontal",
-                                        length=200, mode="indeterminate")
+    def _setup_scroll_area(self):
+        container = tk.Frame(self.main_area, bg=self.colors["bg"])
+        container.pack(fill="both", expand=True)
 
-        # Results List
-        tk.Label(main, text="Recommended for you", font=("Segoe UI", 11, "bold"),
-                 bg=self.colors["main_bg"], fg="white").pack(anchor="w", pady=(20, 10))
+        self.canvas = Canvas(container, bg=self.colors["bg"], highlightthickness=0)
+        self.scrollable_frame = tk.Frame(self.canvas, bg=self.colors["bg"])
 
-        self.results_container = tk.Frame(main, bg=self.colors["main_bg"])
-        self.results_container.pack(fill="both", expand=True)
+        self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw", width=container.winfo_width())
 
-        # 3. PLAYER FOOTER (Visual Only)
-        footer = tk.Frame(self.root, bg="#181818", height=90, highlightbackground="#282828", highlightthickness=1)
-        footer.grid(row=1, column=0, columnspan=2, sticky="ew")
-        footer.pack_propagate(False)
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(int(-1 * (e.delta / 120)), "units"))
+        self.canvas.bind('<Configure>', lambda e: self.canvas.itemconfig(self.canvas.find_all()[0], width=e.width))
 
-        self.lbl_now_playing = tk.Label(footer, text="MusicMelody AI", font=("Segoe UI", 10, "bold"), bg="#181818",
-                                        fg="white")
-        self.lbl_now_playing.place(x=20, y=25)
-        self.lbl_artist = tk.Label(footer, text="Select a song to view...", font=("Segoe UI", 8), bg="#181818",
-                                   fg="#B3B3B3")
-        self.lbl_artist.place(x=20, y=45)
+        self.canvas.pack(side="left", fill="both", expand=True)
 
-        tk.Label(footer, text="⏮   ⏯   ⏭", font=("Segoe UI", 16), bg="#181818", fg="white").place(relx=0.5, rely=0.4,
-                                                                                                  anchor="center")
-        tk.Label(footer, text="0:00 ──────────●───────── 3:45", font=("Segoe UI", 8), bg="#181818", fg="#B3B3B3").place(
-            relx=0.5, rely=0.7, anchor="center")
-
-    def _sidebar_item(self, parent, text, active=False):
-        fg = "white" if active else self.colors["text_sub"]
-        lbl = tk.Label(parent, text=text, font=self.f_bold if active else self.f_sub,
-                       bg=self.colors["sidebar"], fg=fg, cursor="hand2")
-        lbl.pack(anchor="w", padx=25, pady=10)
-        lbl.bind("<Enter>", lambda e: lbl.config(fg="white"))
-        lbl.bind("<Leave>", lambda e: lbl.config(fg=fg))
-
-    def _on_analyze(self):
+    def _detect_mood(self):
         text = self.entry.get()
-        if not text.strip(): return
+        if not text: return
 
-        for widget in self.results_container.winfo_children(): widget.destroy()
-        self.lbl_mood.config(text="Analyzing text patterns...")
-        self.progress.pack(anchor="w", pady=5, fill="x")
-        self.progress.start(10)
-
-        self.user.set_mood_text(text)
-        threading.Thread(target=self._process, args=(text,), daemon=True).start()
-
-    def _process(self, text):
-        mood, emoji = self.analyzer.get_mood_category(text)
-        time.sleep(0.8)
-
-        self.root.after(0, lambda: self.lbl_mood.config(text=f"{emoji} Mood Detected: {mood}"))
-
-        # NOTE: Music is still STORED here by get_recommendations
+        mood = self.analyzer.analyze_mood(text)
+        self.user.add_mood_to_history(mood)
         songs = self.recommender.get_recommendations(mood)
 
-        self.root.after(0, self.progress.stop)
-        self.root.after(0, self.progress.pack_forget)
-        self.root.after(0, lambda: self._show_results(songs))
+        # SAVE STATE
+        self.last_mood = mood
+        self.last_songs = songs
 
-    def _show_results(self, songs):
+        self._render_results(mood, songs)
+
+    def _render_results(self, mood, songs):
+        # Clear previous list
+        for w in self.scrollable_frame.winfo_children(): w.destroy()
+
+        # Mood Title
+        tk.Label(self.scrollable_frame, text=f"Mood: {mood}", font=("Segoe UI", 20, "bold"),
+                 bg=self.colors["bg"], fg=self.colors["accent_1"]).pack(anchor="w", pady=(10, 5))
+
         if not songs:
-            tk.Label(self.results_container, text="No songs found.", bg=self.colors["main_bg"], fg="red").pack()
-            return
+            tk.Label(self.scrollable_frame, text="No songs found.", bg=self.colors["bg"],
+                     fg=self.colors["accent_2"]).pack()
 
-        for i, song in enumerate(songs):
-            self._draw_song_row(song, i + 1)
+        for song in songs:
+            self._create_interactive_row(song)
 
-    def _draw_song_row(self, song, num):
-        row = tk.Frame(self.results_container, bg=self.colors["main_bg"], pady=8)
-        row.pack(fill="x")
+    def _create_interactive_row(self, song):
+        card = tk.Frame(self.scrollable_frame, bg=self.colors["card_bg"], pady=15, padx=20, cursor="hand2")
+        card.pack(fill="x", pady=5)
 
-        tk.Label(row, text=str(num), width=4, bg=self.colors["main_bg"], fg=self.colors["text_sub"]).pack(side="left")
+        title = tk.Label(card, text=song['title'], font=("Segoe UI", 13, "bold"),
+                         bg=self.colors["card_bg"], fg="white", anchor="w", cursor="hand2")
+        title.pack(fill="x")
 
-        tk.Frame(row, bg="#333", width=35, height=35).pack(side="left", padx=10)
+        artist = tk.Label(card, text=song['artist'], font=("Segoe UI", 10),
+                          bg=self.colors["card_bg"], fg=self.colors["text_sub"], anchor="w", cursor="hand2")
+        artist.pack(fill="x")
 
-        info = tk.Frame(row, bg=self.colors["main_bg"])
-        info.pack(side="left", fill="x", expand=True)
+        # Click Logic
+        def on_click(event):
+            self._play_ui(song)
 
-        title = song['title']
-        if len(title) > 50: title = title[:47] + "..."
+        def on_enter(event):
+            card.config(bg=self.colors["card_hover"])
+            title.config(bg=self.colors["card_hover"])
+            artist.config(bg=self.colors["card_hover"])
 
-        tk.Label(info, text=title, font=self.f_bold, bg=self.colors["main_bg"], fg="white", anchor="w").pack(fill="x")
-        tk.Label(info, text="YouTube Music", font=("Segoe UI", 8), bg=self.colors["main_bg"],
-                 fg=self.colors["text_sub"], anchor="w").pack(fill="x")
+        def on_leave(event):
+            card.config(bg=self.colors["card_bg"])
+            title.config(bg=self.colors["card_bg"])
+            artist.config(bg=self.colors["card_bg"])
 
-        tk.Label(row, text=song['duration'], bg=self.colors["main_bg"], fg=self.colors["text_sub"], padx=15).pack(
-            side="right")
+        for widget in [card, title, artist]:
+            widget.bind("<Button-1>", on_click)
+            widget.bind("<Enter>", on_enter)
+            widget.bind("<Leave>", on_leave)
 
-        # --- PLAY BUTTON (Select Only) ---
-        btn = tk.Button(row, text="▶", bg=self.colors["main_bg"], fg="white", bd=0,
-                        font=("Arial", 14), cursor="hand2", activebackground=self.colors["main_bg"],
-                        # This calls _select_song, NOT web browser
-                        command=lambda t=song['title']: self._select_song(t))
-        btn.pack(side="right", padx=10)
+    def _play_ui(self, song):
+        success = self.recommender.play_song(song['filename'])
+        if success:
+            if not self.player_visible:
+                self._build_player_ui()
+                self.player_frame.grid(row=1, column=1, sticky="ew")
+                self.player_visible = True
 
-        row.bind("<Enter>", lambda e: row.config(bg=self.colors["card_bg"]))
-        row.bind("<Leave>", lambda e: row.config(bg=self.colors["main_bg"]))
+            self.lbl_title.config(text=song['title'])
+            self.lbl_artist.config(text=song['artist'])
+            self.btn_play.config(text="⏸")
+        else:
+            messagebox.showinfo("Missing File", f"Could not find '{song['filename']}' in songs folder.")
 
-    def _select_song(self, title):
-        """
-        UPDATED: Updates the UI to show the song is selected,
-        but DOES NOT open the web browser.
-        """
-        # 1. Update the footer text
-        self.lbl_now_playing.config(text=title[:30] + "..." if len(title) > 30 else title)
-        self.lbl_artist.config(text="Selected (Ready to Play)")
+    def _toggle_play_pause(self):
+        status = self.recommender.toggle_pause()
+        if status == "playing":
+            self.btn_play.config(text="⏸")
+        elif status == "paused":
+            self.btn_play.config(text="▶")
 
-        # 2. No webbrowser.open() here!
-        print(f"User selected: {title}")
+    def _stop_ui(self):
+        self.recommender.stop_song()
+        self.player_frame.grid_forget()
+        self.player_visible = False
 
-    # --- THIS WAS MISSING ---
+    def _show_history(self):
+        self._clear_main()
+        tk.Label(self.main_area, text="Your Mood Journey", font=("Segoe UI", 22, "bold"),
+                 bg=self.colors["bg"], fg=self.colors["text_main"]).pack(anchor="w", pady=20)
+
+        for m in reversed(self.user.mood_history):
+            row = tk.Frame(self.main_area, bg=self.colors["card_bg"], padx=20, pady=12)
+            row.pack(fill="x", pady=4)
+            tk.Label(row, text=m, bg=self.colors["card_bg"], fg=self.colors["accent_1"],
+                     font=("Segoe UI", 12, "bold")).pack(side="left")
+
+    def _clear_main(self):
+        # We only clear the widgets, NOT the saved state data
+        for w in self.main_area.winfo_children(): w.destroy()
+
     def run(self):
         self.root.mainloop()
