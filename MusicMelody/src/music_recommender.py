@@ -1,53 +1,89 @@
-import webbrowser
 import json
 import os
-from youtubesearchpython import VideosSearch
+import pygame
 
 
 class MusicRecommender:
     def __init__(self):
-        # Week 3 Requirement: Store Data
-        self.db_file = "music_db.json"
-        self.db = self._load_db()
+        # 1. Setup Paths
+        self.base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.db_path = os.path.join(self.base_dir, "data", "music_db.json")
+        self.songs_dir = os.path.join(self.base_dir, "songs")
 
-    def _load_db(self):
-        """Loads the database from a JSON file into a Python Dictionary"""
-        if os.path.exists(self.db_file):
-            with open(self.db_file, 'r') as f:
+        # 2. Initialize Mixer
+        try:
+            pygame.mixer.init()
+        except Exception as e:
+            print(f"Audio Error: {e}")
+
+        self.songs_data = self._load_data()
+        self.current_song_file = None
+        self.is_paused = False
+        self.start_offset = 0.0
+
+    def _load_data(self):
+        if not os.path.exists(self.db_path):
+            return {}
+        try:
+            with open(self.db_path, 'r') as f:
                 return json.load(f)
-        return {}  # Return empty dict if file doesn't exist
-
-    def _save_db(self):
-        """Saves the current dictionary to the JSON file"""
-        with open(self.db_file, 'w') as f:
-            json.dump(self.db, f, indent=4)
+        except:
+            return {}
 
     def get_recommendations(self, mood):
-        # 1. CHECK DATABASE FIRST
-        if mood in self.db and self.db[mood]:
-            print(f"DEBUG: Found {mood} songs in local database.")
-            return self.db[mood]
+        return self.songs_data.get(mood, [])
 
-        # 2. IF NOT IN DB, SEARCH YOUTUBE
-        print(f"DEBUG: {mood} not in DB. Searching YouTube...")
-        query = f"best {mood} music playlist"
-        videosSearch = VideosSearch(query, limit=5)
-        results = videosSearch.result()
+    # --- SMART TOGGLE ---
+    def toggle_pause(self):
+        """Toggles between Play and Pause. Returns the new state string."""
+        if not self.current_song_file:
+            return "stopped"
 
-        song_list = []
-        if 'result' in results:
-            for video in results['result']:
-                song_list.append({
-                    'title': video['title'],
-                    'link': video['link'],
-                    'duration': video.get('duration', 'N/A')
-                })
+        if self.is_paused:
+            pygame.mixer.music.unpause()
+            self.is_paused = False
+            return "playing"
+        else:
+            pygame.mixer.music.pause()
+            self.is_paused = True
+            return "paused"
 
-        # 3. SAVE NEW RESULTS TO DATABASE
-        self.db[mood] = song_list
-        self._save_db()
+    # --- PLAYER CONTROLS ---
+    def play_song(self, filename, start_time=0.0):
+        path = os.path.join(self.songs_dir, filename)
 
-        return song_list
+        if not os.path.exists(path):
+            print(f"File missing: {path}")
+            return False
 
-    def play_music(self, url):
-        webbrowser.open(url)
+        try:
+            pygame.mixer.music.load(path)
+            pygame.mixer.music.play(start=start_time)
+            self.current_song_file = filename
+            self.start_offset = start_time
+            self.is_paused = False
+            return True
+        except Exception as e:
+            print(f"Playback Error: {e}")
+            return False
+
+    def stop_song(self):
+        pygame.mixer.music.stop()
+        self.is_paused = False
+        self.current_song_file = None
+        self.start_offset = 0.0
+
+    def set_volume(self, val):
+        try:
+            pygame.mixer.music.set_volume(float(val))
+        except:
+            pass
+
+    def seek(self, seconds):
+        if not self.current_song_file: return
+        current_pos_ms = pygame.mixer.music.get_pos()
+        if current_pos_ms == -1: return
+
+        current_pos_sec = (current_pos_ms / 1000) + self.start_offset
+        new_pos = max(0, current_pos_sec + seconds)
+        self.play_song(self.current_song_file, start_time=new_pos)
