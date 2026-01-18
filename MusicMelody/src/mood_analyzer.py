@@ -1,6 +1,5 @@
 class MoodAnalyzer:
     def __init__(self):
-        # Expanded Dictionary of Keywords
         self.keywords = {
             "Happy": ["happy", "joy", "excited", "good", "great", "awesome", "fun", "glad", "smile", "laugh"],
             "Sad": ["sad", "cry", "depressed", "blue", "bad", "lonely", "down", "upset", "hurt", "pain", "grief"],
@@ -12,9 +11,7 @@ class MoodAnalyzer:
             "Chill": ["chill", "vibe", "cool", "drive", "smoke", "easy", "slow", "lazy", "bored", "hangout"],
             "Motivated": ["win", "success", "goal", "dream", "achieve", "hustle", "grind", "inspire", "ambition"]
         }
-
     def analyze_mood(self, text):
-        """Returns the mood category based on keyword matching."""
         text = text.lower()
         for mood, words in self.keywords.items():
             if any(word in text for word in words):
