@@ -1,74 +1,278 @@
 {
-  "Happy": [
-    {"title": "Happy Vibes", "artist": "Pharrell", "filename": "Happyvibes.mp3"},
-    {"title": "Can't Stop Feeling", "artist": "Justin T", "filename": "cantstop.mp3"},
-    {"title": "Walking on Sunshine", "artist": "Katrina", "filename": "walking.mp3"},
-    {"title": "Good Times", "artist": "Chic", "filename": "goodtimes.mp3"},
-    {"title": "Uptown Funk", "artist": "Bruno Mars", "filename": "uptown.mp3"},
-    {"title": "Best Day of My Life", "artist": "Authors", "filename": "bestday.mp3"}
-  ],
-  "Sad": [
-    {"title": "Someone Like You", "artist": "Adele", "filename": "sad_1.mp3"},
-    {"title": "Fix You", "artist": "Coldplay", "filename": "sad_2.mp3"},
-    {"title": "Let Her Go", "artist": "Passenger", "filename": "sad_3.mp3"},
-    {"title": "Yesterday", "artist": "Beatles", "filename": "sad_4.mp3"},
-    {"title": "The Night We Met", "artist": "Lord Huron", "filename": "sad_5.mp3"},
-    {"title": "Tears in Heaven", "artist": "Eric Clapton", "filename": "sad_6.mp3"}
-  ],
-  "Energetic": [
-    {"title": "Eye of the Tiger", "artist": "Survivor", "filename": "energy_1.mp3"},
-    {"title": "Stronger", "artist": "Kanye", "filename": "energy_2.mp3"},
-    {"title": "Thunderstruck", "artist": "AC/DC", "filename": "energy_3.mp3"},
-    {"title": "Lose Yourself", "artist": "Eminem", "filename": "energy_4.mp3"},
-    {"title": "Can't Hold Us", "artist": "Macklemore", "filename": "energy_5.mp3"},
-    {"title": "Level Up", "artist": "Ciara", "filename": "energy_6.mp3"}
-  ],
-  "Calm": [
-    {"title": "Weightless", "artist": "Marconi Union", "filename": "calm_1.mp3"},
-    {"title": "River Flows in You", "artist": "Yiruma", "filename": "calm_2.mp3"},
-    {"title": "Clair de Lune", "artist": "Debussy", "filename": "calm_3.mp3"},
-    {"title": "Night Trouble", "artist": "Petit Biscuit", "filename": "calm_4.mp3"},
-    {"title": "Sunset Lover", "artist": "Petit Biscuit", "filename": "calm_5.mp3"},
-    {"title": "Gymnopédie No.1", "artist": "Satie", "filename": "calm_6.mp3"}
-  ],
-  "Angry": [
-    {"title": "In the End", "artist": "Linkin Park", "filename": "angry_1.mp3"},
-    {"title": "Break Stuff", "artist": "Limp Bizkit", "filename": "angry_2.mp3"},
-    {"title": "Killing In The Name", "artist": "Rage", "filename": "angry_3.mp3"},
-    {"title": "Du Hast", "artist": "Rammstein", "filename": "angry_4.mp3"},
-    {"title": "Psychosocial", "artist": "Slipknot", "filename": "angry_5.mp3"},
-    {"title": "Chop Suey!", "artist": "System of a Down", "filename": "angry_6.mp3"}
-  ],
-  "Focused": [
-    {"title": "Lofi Study Beats", "artist": "Lofi Girl", "filename": "focus_1.mp3"},
-    {"title": "Experience", "artist": "Ludovico", "filename": "focus_2.mp3"},
-    {"title": "Time", "artist": "Hans Zimmer", "filename": "focus_3.mp3"},
-    {"title": "Cornfield Chase", "artist": "Hans Zimmer", "filename": "focus_4.mp3"},
-    {"title": "Eternal Youth", "artist": "Rude", "filename": "focus_5.mp3"},
-    {"title": "Daydreaming", "artist": "Radiohead", "filename": "focus_6.mp3"}
-  ],
-  "Romantic": [
-    {"title": "Perfect", "artist": "Ed Sheeran", "filename": "love_1.mp3"},
-    {"title": "All of Me", "artist": "John Legend", "filename": "love_2.mp3"},
-    {"title": "Thinking Out Loud", "artist": "Ed Sheeran", "filename": "love_3.mp3"},
-    {"title": "Just the Way You Are", "artist": "Bruno Mars", "filename": "love_4.mp3"},
-    {"title": "At Last", "artist": "Etta James", "filename": "love_5.mp3"},
-    {"title": "Lover", "artist": "Taylor Swift", "filename": "love_6.mp3"}
-  ],
-  "Chill": [
-    {"title": "Sunflower", "artist": "Post Malone", "filename": "chill_1.mp3"},
-    {"title": "Location", "artist": "Khalid", "filename": "chill_2.mp3"},
-    {"title": "Passionfruit", "artist": "Drake", "filename": "chill_3.mp3"},
-    {"title": "Slow Dancing", "artist": "Joji", "filename": "chill_4.mp3"},
-    {"title": "Electric Feel", "artist": "MGMT", "filename": "chill_5.mp3"},
-    {"title": "Waves", "artist": "Mr. Probz", "filename": "chill_6.mp3"}
-  ],
-  "Motivated": [
-    {"title": "Hall of Fame", "artist": "The Script", "filename": "motivate_1.mp3"},
-    {"title": "Remember the Name", "artist": "Fort Minor", "filename": "motivate_2.mp3"},
-    {"title": "Unstoppable", "artist": "Sia", "filename": "motivate_3.mp3"},
-    {"title": "Believer", "artist": "Imagine Dragons", "filename": "motivate_4.mp3"},
-    {"title": "High Hopes", "artist": "Panic! At The Disco", "filename": "motivate_5.mp3"},
-    {"title": "Champion", "artist": "Fall Out Boy", "filename": "motivate_6.mp3"}
-  ]
+    "Happy": [
+        {
+            "title": "Happy Vibes",
+            "artist": "Pharrell",
+            "filename": "Happyvibes.mp3"
+        },
+        {
+            "title": "Can't Stop Feeling",
+            "artist": "Justin T",
+            "filename": "cantstop.mp3"
+        },
+        {
+            "title": "Walking on Sunshine",
+            "artist": "Katrina",
+            "filename": "walking.mp3"
+        },
+        {
+            "title": "Good Times",
+            "artist": "Chic",
+            "filename": "goodtimes.mp3"
+        },
+        {
+            "title": "Uptown Funk",
+            "artist": "Bruno Mars",
+            "filename": "uptown.mp3"
+        },
+        {
+            "title": "Best Day of My Life",
+            "artist": "Authors",
+            "filename": "bestday.mp3"
+        }
+    ],
+    "Sad": [
+        {
+            "title": "Long_Distance_Love",
+            "artist": "Ankan_&_Afrin_Shuvendu ",
+            "filename": "Long_Distance_Love.mp3"
+        },
+        {
+            "title": "Someone Like You",
+            "artist": "Adele",
+            "filename": "Adele-Someone-Like-You.mp3"
+        },
+        {
+            "title": "Fix You",
+            "artist": "Coldplay",
+            "filename": "fix you.mp3"
+        },
+        {
+            "title": "Let Her Go",
+            "artist": "Passenger",
+            "filename": "let her go.mp3"
+        },
+        {
+            "title": "Yesterday",
+            "artist": "Beatles",
+            "filename": "yesterday.mp3"
+        }
+
+    ],
+    "Energetic": [
+        {
+            "title": "Stronger",
+            "artist": "Kanye",
+            "filename": "stronger.mp3"
+        },
+        {
+            "title": "Thunderstruck",
+            "artist": "AC/DC",
+            "filename": "energy_3.mp3"
+        },
+        {
+            "title": "Lose Yourself",
+            "artist": "Eminem",
+            "filename": "lose yourself.mp3"
+        },
+        {
+            "title": "Can't Hold Us",
+            "artist": "Macklemore",
+            "filename": "Can't Hold Us.mp3"
+        },
+        {
+            "title": "Level Up",
+            "artist": "Ciara",
+            "filename": "Level Up.mp3"
+        }
+    ],
+    "Calm": [
+        {
+            "title": "Weightless",
+            "artist": "Marconi Union",
+            "filename": "Weightless.mp3"
+        },
+        {
+            "title": "River Flows in You",
+            "artist": "Yiruma",
+            "filename": "River Flows in You.mp3"
+        },
+        {
+            "title": "Clair de Lune",
+            "artist": "Debussy",
+            "filename": "Clair de Lune.mp3"
+        },
+        {
+            "title": "Night Trouble",
+            "artist": "Petit Biscuit",
+            "filename": "Night Trouble.mp3"
+        },
+        {
+            "title": "Sunset Lover",
+            "artist": "Petit Biscuit",
+            "filename": "Sunset Lover.mp3"
+        },
+        {
+            "title": "Chill Gaana",
+            "artist": "Tisha Hossain",
+            "filename": "sweet-life-luxury-chill-438146.mp3",
+            "uploaded_by": "Tisha"
+        }
+    ],
+    "Angry": [
+        {
+            "title": "In the End",
+            "artist": "Linkin Park",
+            "filename": "in the end.mp3"
+        },
+        {
+            "title": "Break Stuff",
+            "artist": "Limp Bizkit",
+            "filename": "Break Stuff.mp3"
+        },
+        {
+            "title": "Killing In The Name",
+            "artist": "Rage",
+            "filename": "Killing In The Name.mp3"
+        },
+        {
+            "title": "Psychosocial",
+            "artist": "Slipknot",
+            "filename": "Psychosocial.mp3"
+        },
+        {
+            "title": "Chop Suey!",
+            "artist": "System of a Down",
+            "filename": "Chop Suey.mp3"
+        }
+    ],
+    "Focused": [
+        {
+            "title": "Lofi Study Beats",
+            "artist": "Lofi Girl",
+            "filename": "Lofi Study Beats.mp3"
+        },
+        {
+            "title": "Experience",
+            "artist": "Ludovico",
+            "filename": "Experience.mp3"
+        },
+        {
+            "title": "Time",
+            "artist": "Hans Zimmer",
+            "filename": "Time.mp3"
+        },
+        {
+            "title": "Cornfield Chase",
+            "artist": "Hans Zimmer",
+            "filename": "Cornfield Chase.mp3"
+        },
+        {
+            "title": "Eternal Youth",
+            "artist": "Rude",
+            "filename": "Eternal Youth.mp3"
+        },
+        {
+            "title": "Daydreaming",
+            "artist": "Radiohead",
+            "filename": "Daydreaming.mp3"
+        }
+    ],
+    "Romantic": [
+        {
+            "title": "Lover",
+            "artist": "Taylor Swift",
+            "filename": "Lover.mp3"
+        },
+        {
+            "title": "Perfect",
+            "artist": "Ed Sheeran",
+            "filename": "Perfect.mp3"
+        },
+        {
+            "title": "All of Me",
+            "artist": "John Legend",
+            "filename": "All of Me.mp3"
+        },
+        {
+            "title": "Thinking Out Loud",
+            "artist": "Ed Sheeran",
+            "filename": "Thinking Out Loud.mp3"
+        },
+        {
+            "title": "Just the Way You Are",
+            "artist": "Bruno Mars",
+            "filename": "Just the Way You Are.mp3"
+        },
+        {
+            "title": "At Last",
+            "artist": "Etta James",
+            "filename": "At Last.mp3"
+        }
+
+    ],
+    "Chill": [
+        {
+            "title": "Sunflower",
+            "artist": "Post Malone",
+            "filename": "Sunflower.mp3"
+        },
+        {
+            "title": "Location",
+            "artist": "Khalid",
+            "filename": "Location.mp3"
+        },
+        {
+            "title": "Passionfruit",
+            "artist": "Drake",
+            "filename": "Passionfruit .mp3"
+        },
+        {
+            "title": "Slow Dancing",
+            "artist": "Joji",
+            "filename": "Slow Dancing.mp3"
+        },
+        {
+            "title": "Electric Feel",
+            "artist": "MGMT",
+            "filename": "Electric Feel.mp3"
+        },
+        {
+            "title": "Waves",
+            "artist": "Mr. Probz",
+            "filename": "Waves.mp3"
+        }
+    ],
+    "Motivated": [
+        {
+            "title": "Hall of Fame",
+            "artist": "The Script",
+            "filename": "Hall of Fame.mp3"
+        },
+        {
+            "title": "Remember the Name",
+            "artist": "Fort Minor",
+            "filename": "Remember the Name.mp3"
+        },
+        {
+            "title": "Unstoppable",
+            "artist": "Sia",
+            "filename": "Unstoppable.mp3"
+        },
+        {
+            "title": "Believer",
+            "artist": "Imagine Dragons",
+            "filename": "Believer.mp3"
+        },
+        {
+            "title": "High Hopes",
+            "artist": "Panic! At The Disco",
+            "filename": "motivate_5.mp3"
+        },
+        {
+            "title": "Champion",
+            "artist": "Fall Out Boy",
+            "filename": "motivate_6.mp3"
+        }
+    ]
 }
